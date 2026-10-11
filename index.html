@@ -4,139 +4,395 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bridging scaffold - design submission pack - BNS-SC-001 Rev P01</title>
+<meta name="description" content="Design submission pack for a 14 m bridging scaffold over a live alley between two houses being re-roofed. For check and approval by a temporary works designer. Not for construction.">
+<meta name="theme-color" content="#0A0B0D">
+<script>document.documentElement.className += " js";</script>
 <style>
-  :root{
-    --ink:#14110f; --paper:#f8f6f3; --line:#d8d2c9; --red:#b3261e; --amber:#b06a00;
-    --green:#1b6e4a; --blue:#1b5e7e;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--paper);color:var(--ink);
-       font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
-  .wrap{max-width:900px;margin:0 auto;padding:0 18px 60px}
-  .status{background:var(--red);color:#fff;text-align:center;font-weight:700;
-          letter-spacing:.04em;font-size:14px;padding:10px 14px;line-height:1.35}
-  header{padding:26px 0 8px;border-bottom:3px solid var(--ink)}
-  h1{font-size:27px;line-height:1.15;margin:0 0 6px}
-  .sub{color:#5b544c;font-size:14px}
-  .sub b{color:var(--ink)}
-  .caveat{margin:16px 0 0;padding:12px 14px;border-left:4px solid var(--red);background:#fff;
-          font-size:14px;color:#3d3730}
-  h2{font-size:19px;margin:34px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
-  .cta{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 4px}
-  a.btn{display:inline-block;text-decoration:none;padding:13px 20px;border:2px solid var(--ink);
-        font-weight:700;font-size:15px;color:var(--ink);background:#fff;
-        box-shadow:3px 3px 0 var(--ink)}
-  a.btn.v{background:var(--ink);color:#fff;box-shadow:3px 3px 0 var(--amber)}
-  a.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
-  .nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin-top:14px}
-  .num{background:#fff;border:1px solid var(--line);border-top:4px solid var(--ink);padding:12px 14px}
-  .num b{display:block;font-size:22px;letter-spacing:-.01em}
-  .num span{font-size:13.5px;color:#5b544c}
-  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14.5px}
-  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-  th{background:#efece7;font-size:13px;text-transform:uppercase;letter-spacing:.04em}
-  td.s{white-space:nowrap;font-weight:700}
-  ul{margin:10px 0 0;padding-left:22px}
-  li{margin:7px 0}
-  .flag{font-weight:700;color:var(--red)}
-  .ok{font-weight:700;color:var(--green)}
-  .info{background:#fff;border:1px solid var(--line);padding:14px 16px;margin-top:14px;font-size:14.5px}
-  footer{margin-top:44px;padding-top:16px;border-top:3px solid var(--ink);font-size:13.5px;color:#5b544c}
-  a{color:var(--blue)}
-  @media print{
-    .status{color:#000;background:#fff;border:2px solid #000}
-    a.btn{box-shadow:none}
-    body{background:#fff}
-  }
+/* ------------------------------------------------------------------ fonts */
+@font-face{font-family:Geist;src:url(fonts/geist.woff2) format('woff2');font-weight:400 700;font-display:swap;font-style:normal}
+@font-face{font-family:'Geist Mono';src:url(fonts/geistmono.woff2) format('woff2');font-weight:400 600;font-display:swap;font-style:normal}
+
+/* ------------------------------------------------------------------ tokens
+   ONE accent (amber) for the whole page. Red is reserved for the status only,
+   because "not a permit to load" is semantic, not decoration.
+   Radius scale, documented: panels 18, controls 12, status chip 999.        */
+:root{
+  --bg:#0A0B0D;
+  --bg-2:#0E1013;
+  --panel:#131519;
+  --panel-2:#171A1F;
+  --line:rgba(255,255,255,.09);
+  --line-2:rgba(255,255,255,.16);
+  --ink:#EEF0F3;
+  --ink-2:#A7ADB8;
+  --ink-3:#7C838F;
+  --accent:#E0A253;
+  --accent-ink:#160E03;
+  --status:#FF5C4D;
+  --ok:#5FD39A;
+  --r-panel:18px;
+  --r-ctl:12px;
+  --r-chip:999px;
+  --pad:clamp(18px,4vw,44px);
+  --maxw:1240px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:Geist,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:16.5px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{ /* one fixed, non-scrolling glow. Never on a scrolling container. */
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(1100px 520px at 78% -8%,rgba(224,162,83,.10),transparent 62%),
+    radial-gradient(900px 500px at 4% 6%,rgba(120,150,200,.06),transparent 60%);
+}
+.wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.022em;line-height:1.06}
+p{margin:0}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+.mono{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+/* ------------------------------------------------------------------ header */
+header.top{
+  position:sticky;top:0;z-index:20;
+  background:rgba(10,11,13,.82);backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid var(--line);
+}
+.bar{display:flex;align-items:center;gap:clamp(12px,2vw,26px);height:68px}
+.mark{display:flex;align-items:center;gap:11px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.mark i{width:26px;height:26px;border-radius:6px;background:var(--accent);display:grid;place-items:center;
+        color:var(--accent-ink);font-style:normal;font-weight:700;font-size:13px;flex:none}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-chip);
+  border:1px solid rgba(255,92,77,.42);background:rgba(255,92,77,.09);
+  color:#FFB3AA;font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+  padding:6px 11px;white-space:nowrap;
+}
+nav{display:flex;gap:clamp(12px,1.8vw,24px);margin-left:auto;font-size:14.5px}
+nav a{color:var(--ink-2)}
+nav a:hover{color:var(--ink);text-decoration:none}
+.cta-sm{
+  margin-left:6px;background:var(--accent);color:var(--accent-ink);
+  border-radius:var(--r-ctl);padding:10px 16px;font-weight:600;font-size:14.5px;white-space:nowrap;
+  transition:transform .18s cubic-bezier(.16,1,.3,1),filter .18s;
+}
+.cta-sm:hover{filter:brightness(1.07);text-decoration:none}
+.cta-sm:active{transform:translateY(1px)}
+
+/* ------------------------------------------------------------------ hero */
+.hero{display:grid;grid-template-columns:1.06fr .94fr;gap:clamp(24px,3.4vw,52px);
+      align-items:center;padding:clamp(22px,3vw,44px) 0 clamp(22px,3vw,40px)}
+.hero h1{font-size:clamp(2.15rem,4.6vw,3.65rem)}
+.hero .lede{margin-top:1.05rem;color:var(--ink-2);font-size:clamp(1rem,1.35vw,1.16rem);max-width:46ch}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.7rem}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;border-radius:var(--r-ctl);
+  padding:14px 20px;font-weight:600;font-size:15.5px;white-space:nowrap;border:1px solid transparent;
+  transition:transform .18s cubic-bezier(.16,1,.3,1),background .18s,border-color .18s;
+}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{filter:brightness(1.07);text-decoration:none}
+.btn-ghost{border-color:var(--line-2);color:var(--ink);background:rgba(255,255,255,.02)}
+.btn-ghost:hover{background:rgba(255,255,255,.06);text-decoration:none}
+.btn:active{transform:translateY(1px)}
+figure{margin:0}
+.shot{border:1px solid var(--line-2);border-radius:var(--r-panel);overflow:hidden;background:var(--panel);display:block}
+.shot img{display:block;width:100%;height:auto}
+/* the hero image must not set the row height, or the fold fills with one picture */
+.hero figure{max-width:540px;justify-self:end;width:100%}
+.hero .shot img{height:min(52vh,500px);object-fit:cover;object-position:50% 58%}
+figcaption{margin-top:11px;color:var(--ink-3);font-size:12.8px}
+
+/* ------------------------------------------------------------------ numbers */
+.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+       display:grid;grid-template-columns:repeat(5,1fr)}
+.stat{padding:clamp(16px,2.4vw,26px) clamp(12px,2vw,22px);border-left:1px solid var(--line)}
+.stat:first-child{border-left:0;padding-left:0}
+.stat b{display:block;font-family:'Geist Mono',monospace;font-weight:500;
+        font-size:clamp(1.25rem,2.3vw,1.85rem);letter-spacing:-.02em;color:var(--ink)}
+.stat b.hot{color:var(--accent)}
+.stat span{display:block;margin-top:7px;color:var(--ink-2);font-size:13.2px;line-height:1.45}
+
+/* ------------------------------------------------------------------ sections */
+section{padding:clamp(46px,7vw,92px) 0;border-top:1px solid var(--line)}
+section h2{font-size:clamp(1.5rem,2.9vw,2.3rem);max-width:20ch}
+section .sub{margin-top:.85rem;color:var(--ink-2);max-width:62ch}
+
+/* sheets grid */
+.sheets{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(10px,1.5vw,18px);margin-top:clamp(24px,3vw,38px)}
+.sheet{display:block;border:1px solid var(--line);border-radius:var(--r-panel);overflow:hidden;
+       background:var(--panel);transition:border-color .2s,transform .2s cubic-bezier(.16,1,.3,1)}
+.sheet:hover{border-color:rgba(224,162,83,.5);transform:translateY(-3px);text-decoration:none}
+.sheet img{display:block;width:100%;height:auto;background:#fff}
+.sheet .m{padding:11px 12px 13px}
+.sheet .id{font-family:'Geist Mono',monospace;font-size:11.5px;color:var(--accent);letter-spacing:.04em}
+.sheet .ti{display:block;margin-top:4px;font-size:13px;color:var(--ink);line-height:1.35}
+.sheet .k{display:block;margin-top:6px;font-size:11.8px;color:var(--ink-3)}
+
+/* wide media band */
+.band{display:grid;grid-template-columns:.92fr 1.08fr;gap:clamp(24px,3.4vw,52px);align-items:center}
+.band .shot img{display:block;width:100%;height:auto}
+.facts{display:grid;gap:10px;margin-top:1.3rem}
+.fact{display:flex;gap:12px;font-size:14.6px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:10px}
+.fact b{color:var(--ink);font-family:'Geist Mono',monospace;font-weight:500;min-width:7.5em}
+
+/* sequence + panel */
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,3.4vw,56px);align-items:start}
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:16px}
+ol.steps li{counter-increment:s;padding-left:44px;position:relative;color:var(--ink-2);font-size:15px}
+ol.steps li::before{
+  content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;
+  font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--accent);
+  border:1px solid var(--line-2);border-radius:8px;padding:3px 7px;
+}
+ol.steps li b{color:var(--ink);display:block;margin-bottom:3px;font-weight:600}
+ol.steps li.stop b{color:var(--status)}
+.panel{border:1px solid var(--line);border-left:3px solid var(--status);border-radius:var(--r-panel);
+       background:var(--panel);padding:clamp(20px,2.6vw,30px)}
+.panel h3{font-size:1.06rem;letter-spacing:-.01em}
+.panel p{margin-top:10px;color:var(--ink-2);font-size:14.6px}
+.panel .open{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.panel .open em{color:var(--ink);font-style:normal;font-weight:600}
+ul.no{list-style:none;margin:0;padding:0;display:grid;gap:13px}
+ul.no li{position:relative;padding-left:26px;color:var(--ink-2);font-size:15px}
+ul.no li::before{content:"";position:absolute;left:4px;top:9px;width:11px;height:1.5px;background:var(--status)}
+ul.no li b{color:var(--ink);font-weight:600}
+
+/* reveal: transform + opacity only, skipped under reduced motion.
+   The hidden state is gated on html.js, so with no JavaScript the page is
+   simply static and fully visible. Content must never depend on a script. */
+.js .rv{opacity:0;transform:translateY(14px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.js .rv.in{opacity:1;transform:none}
+
+footer{border-top:1px solid var(--line);padding:clamp(34px,4vw,54px) 0 60px;color:var(--ink-3);font-size:13.6px}
+footer .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+footer b{color:var(--ink-2);font-weight:600;display:block;margin-bottom:7px}
+footer .mono{font-size:12.6px}
+
+/* ------------------------------------------------------------------ phone */
+@media (max-width:1024px){
+  nav{display:none}
+  .sheets{grid-template-columns:repeat(3,1fr)}
+  .strip{grid-template-columns:repeat(2,1fr)}
+  .stat{border-left:0;border-top:1px solid var(--line);padding-left:0}
+  .stat:nth-child(-n+2){border-top:0}
+}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;gap:22px;padding-top:20px}
+  .hero figure{order:-1;max-width:none}
+  .hero .shot img{height:min(34vh,300px);object-position:50% 62%}
+  .band,.two{grid-template-columns:1fr;gap:26px}
+  .sheets{grid-template-columns:repeat(2,1fr)}
+  footer .grid{grid-template-columns:1fr;gap:20px}
+  .bar{height:auto;flex-wrap:wrap;padding:12px 0;gap:10px}
+  .mark{font-size:15px}
+  .cta-sm{margin-left:auto}
+  body{font-size:16px}
+}
+@media (max-width:460px){
+  .stat b{font-size:1.3rem}
+  .chip{font-size:10px;letter-spacing:.06em;padding:5px 9px;white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .rv{opacity:1;transform:none;transition:none}
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+@media print{
+  body{background:#fff;color:#000}
+  body::before,header.top,.btns,ol.steps li::before{display:none}
+  .sheet,.panel,.shot{border-color:#999}
+}
 </style>
 </head>
 <body>
-<div class="status">NOT A DESIGN &nbsp;&middot;&nbsp; NOT FOR CONSTRUCTION &nbsp;&middot;&nbsp; NOT A PERMIT TO LOAD</div>
 
-<div class="wrap">
-<header>
-  <h1>Scaffold bridging between two properties - design submission pack</h1>
-  <div class="sub">
-    14.00 m bridging scaffold carrying a working platform between two dwellings being re-roofed &middot;
-    Christchurch, Dorset BH23 &middot; <b>BNS-SC-001 Rev P01</b> &middot; 11 October 2026
+<header class="top">
+  <div class="wrap bar">
+    <span class="mark"><i>SC</i>BNS-SC-001</span>
+    <span class="chip">Not a design &middot; not for construction &middot; not a permit to load</span>
+    <nav>
+      <a href="#sheets">Sheets</a>
+      <a href="#model">3D model</a>
+      <a href="#before">Before erection</a>
+    </nav>
+    <a class="cta-sm" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">Open the pack</a>
   </div>
 </header>
 
-<p class="caveat">
-  <b>This is a submission for check and approval, not an approved design.</b>
-  A platform that bridges the gap between two separate structures is outside every TG20:21 and
-  TG30:24 compliance sheet, so it has to be designed and independently checked by a competent
-  temporary works designer to BS 5975-1:2024. The design and its check are theirs.
-  Nothing is erected, and nothing is loaded, until a permit to load is issued.
-</p>
+<main>
+<div class="wrap">
+  <!-- ------------------------------------------------------------ hero -->
+  <div class="hero">
+    <div>
+      <h1>Fourteen metres of scaffold, bridged between two houses.</h1>
+      <p class="lede">Design submission for a working platform spanning a live alley, drawn for check by a temporary works designer.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">Open the pack &middot; 10 sheets</a>
+        <a class="btn btn-ghost" href="viewer/">Walk the 3D model</a>
+      </div>
+    </div>
+    <figure>
+      <span class="shot"><img src="img/hero.jpg" width="1180" height="1475" alt="Inside the alley: scaffold frames receding towards a ladder, deck overhead and the pedestrian route marked on the ground"></span>
+      <figcaption>The 3D model at deck level, looking down the run towards the access ladder.</figcaption>
+    </figure>
+  </div>
 
-<div class="cta">
-  <a class="btn v" href="viewer/">Open the 3D model &rarr;</a>
-  <a class="btn" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf">Open the pack (PDF, 10 A3 sheets)</a>
+  <!-- ------------------------------------------------------------ numbers -->
+  <div class="strip">
+    <div class="stat"><b>14.00 m</b><span>run front to back, 22 standards at 1.40 m centres</span></div>
+    <div class="stat"><b>5.75 m</b><span>deck level, three lifts, 1.35 m wide platform</span></div>
+    <div class="stat"><b class="hot">17x</b><span>short on wind: 270 kNm overturning against 16 kNm of self-weight</span></div>
+    <div class="stat"><b>30</b><span>ties at 3.0 kN each, half their assumed capacity</span></div>
+    <div class="stat"><b>20 t</b><span>of kentledge would be the alternative, which is not practicable</span></div>
+  </div>
 </div>
 
-<h2>The five numbers that decide this job</h2>
-<div class="nums">
-  <div class="num"><b>14.00 m run</b><span>11 frames, 22 standards at 1.40 m centres</span></div>
-  <div class="num"><b>5.75 m deck</b><span>3 lifts at 2.00 m, 1.35 m wide platform</span></div>
-  <div class="num"><b>17x short on wind</b><span>270 kNm overturning against 16 kNm of self-weight</span></div>
-  <div class="num"><b>30 ties</b><span>3.0 kN each, 50% of assumed capacity - structural, not restraint</span></div>
-  <div class="num"><b>20 t kentledge</b><span>the alternative, shown only to prove it is not practicable</span></div>
-</div>
-<p>Because the scaffold cannot stand up on its own, the ties are the design: most of them go into
-the adjoining property, so written consent is the critical path. Without it this concept does not
-stand, and the rethink happens before erection rather than on the morning.</p>
+<!-- ------------------------------------------------------------ sheets -->
+<section id="sheets">
+  <div class="wrap">
+    <h2>Every sheet in the pack</h2>
+    <p class="sub">Ten A3 sheets, merged into one PDF you can forward. Tap any sheet to open the pack. Print at A3, 100 per cent, do not scale.</p>
+    <div class="sheets">
+      <a class="sheet rv" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">
+        <img src="thumbs/sheet-01.jpg" width="662" height="468" alt="Cover sheet" loading="lazy">
+        <span class="m"><span class="id">SC-00</span><span class="ti">Cover, index and critical path</span><span class="k">1 page</span></span></a>
+      <a class="sheet rv" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">
+        <img src="thumbs/sheet-02.jpg" width="662" height="468" alt="Setting-out plan" loading="lazy">
+        <span class="m"><span class="id">SC-01</span><span class="ti">Setting-out plan, 1:50</span><span class="k">Frames, ties, loading bay, route</span></span></a>
+      <a class="sheet rv" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">
+        <img src="thumbs/sheet-03.jpg" width="662" height="468" alt="Longitudinal elevation" loading="lazy">
+        <span class="m"><span class="id">SC-02</span><span class="ti">Longitudinal elevation, 1:50</span><span class="k">Three lifts, access tower, hi-ab bay</span></span></a>
+      <a class="sheet rv" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">
+        <img src="thumbs/sheet-04.jpg" width="662" height="468" alt="Section through the gap" loading="lazy">
+        <span class="m"><span class="id">SC-03</span><span class="ti">Section through the gap, 1:30</span><span class="k">What fits between the walls</span></span></a>
+      <a class="sheet rv" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">
+        <img src="thumbs/sheet-05.jpg" width="662" height="468" alt="Design brief" loading="lazy">
+        <span class="m"><span class="id">SC-04</span><span class="ti">Design brief for the designer</span><span class="k">11 site inputs and their status</span></span></a>
+      <a class="sheet rv" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">
+        <img src="thumbs/sheet-06.jpg" width="662" height="468" alt="Load demand" loading="lazy">
+        <span class="m"><span class="id">SC-05</span><span class="ti">Load demand and calculations</span><span class="k">Every figure with its source</span></span></a>
+      <a class="sheet rv" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">
+        <img src="thumbs/sheet-07.jpg" width="662" height="468" alt="Risk assessment" loading="lazy">
+        <span class="m"><span class="id">SC-06</span><span class="ti">Risk assessment</span><span class="k">15 hazards, hold points</span></span></a>
+      <a class="sheet rv" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">
+        <img src="thumbs/sheet-08.jpg" width="662" height="468" alt="Method statement" loading="lazy">
+        <span class="m"><span class="id">SC-07</span><span class="ti">Method statement</span><span class="k">Build, use and strike sequence</span></span></a>
+      <a class="sheet rv" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">
+        <img src="thumbs/sheet-09.jpg" width="662" height="468" alt="Take-off and budget" loading="lazy">
+        <span class="m"><span class="id">SC-08</span><span class="ti">Take-off and budget</span><span class="k">Quantities, rates sourced</span></span></a>
+      <a class="sheet rv" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">
+        <img src="thumbs/sheet-10.jpg" width="662" height="468" alt="Erection briefing" loading="lazy">
+        <span class="m"><span class="id">SC-09</span><span class="ti">Erection briefing</span><span class="k">One page for the crew</span></span></a>
+    </div>
+  </div>
+</section>
 
-<h2>What the pack contains</h2>
-<table>
-  <tr><th>Sheet</th><th>Title and what it is</th></tr>
-  <tr><td class="s">SC-00</td><td>Pack cover, index and the critical path</td></tr>
-  <tr><td class="s">SC-01</td><td>Setting-out plan 1:50 - the alley, frames, bays, ties, loading bay, access, pedestrian route</td></tr>
-  <tr><td class="s">SC-02</td><td>Longitudinal elevation 1:50 - the 14.00 m run, three lifts, edge protection, the hi-ab bay</td></tr>
-  <tr><td class="s">SC-03</td><td>Section through the gap 1:30 - what fits between the two walls, and why the deck sits below the soffit</td></tr>
-  <tr><td class="s">SC-04</td><td>Design brief for the temporary works designer, with every site input and its status</td></tr>
-  <tr><td class="s">SC-05</td><td>Load demand and calculation summary - every figure with its method and source</td></tr>
-  <tr><td class="s">SC-06</td><td>Risk assessment, with the hold points where work stops</td></tr>
-  <tr><td class="s">SC-07</td><td>Method statement - build, use and strike sequence</td></tr>
-  <tr><td class="s">SC-08</td><td>Materials take-off and budget indication, with every rate sourced</td></tr>
-  <tr><td class="s">SC-09</td><td>Erection briefing - one page for the crew</td></tr>
-</table>
+<!-- ------------------------------------------------------------ model -->
+<section id="model">
+  <div class="wrap band">
+    <div>
+      <h2>The model, not an impression of it.</h2>
+      <p class="sub">Built from the same dimensions as the drawings. Walk the deck, look down the alley, or switch to frame only to see the tube frame on its own. It works on a phone.</p>
+      <div class="facts">
+        <div class="fact"><b>Deck 5.75 m</b><span>1.35 m wide, boards secured against uplift</span></div>
+        <div class="fact"><b>22 standards</b><span>11 frames at 1.40 m, braced and tied</span></div>
+        <div class="fact"><b>Walkway</b><span>1.10 m clear kept between the spreader rows</span></div>
+      </div>
+      <div class="btns"><a class="btn btn-primary" href="viewer/">Walk the 3D model</a></div>
+    </div>
+    <figure>
+      <span class="shot"><img src="img/orbit-angle.jpg" width="1760" height="990" alt="The bridging platform spanning between two buildings, with the deck, guard rails and the access tower at one end" loading="lazy"></span>
+      <figcaption>The platform between the two roof edges, with the access tower at the rear.</figcaption>
+    </figure>
+  </div>
+</section>
 
-<h2>Before any tube moves</h2>
-<ul>
-  <li><span class="flag">Ties.</span> Written consent from the adjoining owner for the ties and the
-      access. Party Wall notice as applicable. This is the critical path.</li>
-  <li><span class="flag">Measure.</span> Clear width wall face to wall face. Everything here is set
-      from an assumed 1.50 m - the sheet dimension given was roof edge to roof edge, which is wider
-      than the walls. If it is not 1.50 m, the bay spacing and the platform change.</li>
-  <li><span class="flag">Measure.</span> Eaves height and the soffit and gutter projection, once the
-      strip begins. One rafter settles the roof pitch.</li>
-  <li><span class="flag">Confirm.</span> Ground under the legs; services overhead and underfoot;
-      whether anything is to be netted or sheeted, because that decides the wind case.</li>
-</ul>
+<!-- ------------------------------------------------------------ before -->
+<section id="before">
+  <div class="wrap two">
+    <div>
+      <h2>Before any tube moves</h2>
+      <ol class="steps">
+        <li class="stop"><b>The ties need written consent from next door</b>Most of the 30 ties go into the adjoining property, and the scaffold cannot stand without them. No consent, no concept, and the rethink happens before erection rather than on the morning.</li>
+        <li><b>Measure the walls, not the roof edges</b>Everything here is set from an assumed 1.50 m between wall faces. The 1.80 m given is roof edge to roof edge, which is wider. If the walls are not 1.50 m apart, the bay spacing and the platform change.</li>
+        <li><b>Measure the eaves and the soffit</b>Eaves height and the gutter projection, once the strip begins. They set the deck level and the roof edge protection.</li>
+        <li><b>Settle the roof pitch with one rafter</b>It cannot be derived from the three dimensions given, so it is marked as estimated until somebody measures one.</li>
+        <li><b>Confirm the ground and the services</b>Overhead cabling and gully gratings are both visible in the photographs, and the ground under the legs is unproven.</li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3>Two things still open, and they matter</h3>
+      <p><em>How the tile packs actually get onto the roofs.</em> Straight to the roof by hi-ab, or landed in the bay and then up? It changes the lift plan and the figure on the sign.</p>
+      <p><em>The real weight of a delivered pack.</em> The loading bay is designed and signed for 1.0 t placed, 12.3 kN design. Heavier packs change that number.</p>
+      <div class="open">
+        <h3>Not a TG20 compliance sheet</h3>
+        <p>A platform bridging two structures sits outside every published configuration, so it is designed and independently checked to BS 5975-1:2024. The design belongs to the designer, and nothing is loaded until a permit to load is issued.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-<div class="info">
-  <b>Two things still open, and they matter:</b>
-  how the tile packs actually get onto the roofs (hi-ab straight to the roof, or landed in the bay),
-  and the real weight of a delivered pack - the loading bay is designed and signed for
-  <b>1.0 t placed, 12.3 kN design</b>. If the packs are heavier, that figure changes.
-</div>
-
-<h2>What this pack is not</h2>
-<ul>
-  <li>Not a design: no member size is signed off, and the bridging beam is explicitly a
-      <b>candidate</b> pending the designer's own check.</li>
-  <li>Not a permit to load, and it cannot be turned into one.</li>
-  <li>Not a TG20:21 compliance sheet, and no number in it may be presented as one.</li>
-  <li>Not a survey: everything marked SURVEY or ASSUMED in SC-04 must be replaced with a real value.</li>
-</ul>
+<!-- ------------------------------------------------------------ not -->
+<section>
+  <div class="wrap">
+    <h2>What this pack is not</h2>
+    <ul class="no">
+      <li><b>Not a design.</b> No member size is signed off, and the bridging beam is named as a candidate pending the designer's own check.</li>
+      <li><b>Not a permit to load,</b> and it cannot be turned into one.</li>
+      <li><b>Not a compliance sheet.</b> No figure in it may be presented as one.</li>
+      <li><b>Not a survey.</b> Anything marked SURVEY or ASSUMED on SC-04 must be replaced with a measured value before the designer commits.</li>
+    </ul>
+  </div>
+</section>
+</main>
 
 <footer>
-  Prepared by Banksy (an agent) for D Hopwood &middot; Ref BNS-SC-001 Rev P01 &middot; 11 October 2026<br>
-  For check and approval by a competent temporary works designer, who owns the design and the
-  independent check under BS 5975-1:2024.<br>
-  Print the sheets at A3, 100 per cent, do not scale. Where anything differs, the figured dimensions govern.
+  <div class="wrap grid">
+    <div>
+      <b>Prepared by</b>
+      Banksy, an agent, for D Hopwood<br>
+      <span class="mono">11 October 2026</span>
+    </div>
+    <div>
+      <b>For check and approval by</b>
+      A competent temporary works designer, who owns the design and its independent check under BS 5975-1:2024.
+    </div>
+    <div>
+      <b>Document</b>
+      <span class="mono">BNS-SC-001 Rev P01</span><br>
+      Print the sheets at A3, 100 per cent, do not scale. Where anything differs, the figured dimensions govern.
+    </div>
+  </div>
 </footer>
-</div>
+
+<script>
+/* Reveal on scroll: IntersectionObserver, not a scroll listener.
+   Transform and opacity only. Skipped entirely under reduced motion. */
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+  if (reduce || !('IntersectionObserver' in window)) {
+    els.forEach(function(e){ e.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en, i){
+      if (!en.isIntersecting) return;
+      var el = en.target;
+      el.style.transitionDelay = (Math.min(i, 5) * 55) + 'ms';
+      el.classList.add('in');
+      io.unobserve(el);
+    });
+  }, {rootMargin: '0px 0px -8% 0px', threshold: 0.12});
+  els.forEach(function(e){ io.observe(e); });
+})();
+</script>
 </body>
 </html>
