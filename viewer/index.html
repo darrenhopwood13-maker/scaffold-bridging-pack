@@ -92,6 +92,7 @@
     <div class="bar">
       <button id="btnMode" class="mode" type="button">MODE: ORBIT</button>
       <button id="btnFrame" type="button">FRAME ONLY</button>
+      <button id="btnTies" type="button">TIES</button>
       <button id="btnLabels" type="button">LABELS</button>
       <button id="btnReset" type="button">RESET VIEW</button>
       <div id="hud">--</div>
@@ -181,7 +182,10 @@ var MAT = {
   green:   bas(0x2fbf71),
   figure:  lam(0xf2c200),
   head:    lam(0x2b2f36),
-  ladder:  lam(0x9aa0a8)
+  ladder:  lam(0x9aa0a8),
+  tie:     lam(0xc0392b),   // ties are the design-critical element - they read red
+  tiePad:  lam(0x343841),
+  foam:    lam(0xdedad2)    // tube protection foam at every wall contact
 };
 
 // ---------------------------------------------------------------- groups
@@ -195,8 +199,9 @@ var gTower   = new THREE.Group();
 var gRoute   = new THREE.Group();
 var gFigure  = new THREE.Group();
 var gLabels  = new THREE.Group();
+var gTie     = new THREE.Group();
 gLabels.name = 'labels';
-scene.add(gGround, gBuild, gBase, gFrame, gDeck, gRail, gTower, gRoute, gFigure, gLabels);
+scene.add(gGround, gBuild, gBase, gFrame, gDeck, gRail, gTower, gRoute, gFigure, gTie, gLabels);
 
 // ---------------------------------------------------------------- primitives
 // bx(width along X, depth along Z, height in Y, centre X, BOTTOM Y, centre Z, material, parent)
@@ -415,6 +420,45 @@ function tower(){
 }
 tower();
 
+// ---------------------------------------------------------------- TIES  (the design-critical element)
+// 30 ties: 5 columns x 3 levels x both faces, 3.0 kN each. Without them the
+// scaffold is 17x short against wind on its own self-weight, so they are drawn
+// in red and they STAY VISIBLE in frame-only mode.
+var TIE_Z = [0.0, 3.5, 7.0, 10.5, 14.0];
+var TIE_Y = [2.00, 4.00, 6.00];
+function ties(){
+  TIE_Z.forEach(function(z){
+    TIE_Y.forEach(function(y){
+      [-1, 1].forEach(function(s){
+        var x0 = s * STD_X, xw = s * ALLEY;
+        tube([x0, y, z], [xw, y, z], 0.024, MAT.tie, gTie);              // the tie
+        tubeX(x0 - 0.035, x0 + 0.035, y - 0.05, z, 0.013, MAT.tie, gTie); // coupler at the standard
+        bx(0.02, 0.15, 0.15, s * (ALLEY - 0.012), y - 0.075, z, MAT.tiePad, gTie);  // pad on the wall
+        // protection foam where the tie meets the finished face
+        tube([s * (ALLEY - 0.12), y, z], [s * (ALLEY - 0.022), y, z], 0.036, MAT.foam, gTie);
+      });
+    });
+  });
+  // foam sleeves on the wall ends of every transom: the tube ends sit 50 mm off
+  // the face, well inside the 150 mm protection zone
+  FRAMES.forEach(function(z){
+    [2.00, 4.00, 6.00].forEach(function(y){
+      [-1, 1].forEach(function(s){
+        tube([s * (STD_X - 0.10), y, z], [s * STD_X, y, z], 0.033, MAT.foam, gTie);
+      });
+    });
+  });
+  // The tie itself spans only 50 mm (standard at 0.70, wall at 0.75), so from
+  // above it hides under the deck. Mark each tie COLUMN on the wall face, the way
+  // a drawing does, so all five positions read from any angle.
+  TIE_Z.forEach(function(z){
+    [-1, 1].forEach(function(s){
+      bx(0.02, 0.06, 5.60, s * (ALLEY - 0.032), 1.10, z, MAT.tie, gTie);
+    });
+  });
+}
+ties();
+
 // ---------------------------------------------------------------- PEDESTRIAN ROUTE (under the deck, between the pads)
 function route(){
   var z0 = 0.4, z1 = 13.6;
@@ -492,6 +536,8 @@ makeLabel("1.40 m standards",                   [0, 1.35, 12.9]);
 makeLabel("walkway 1.10 m clear below",         [0, 0.62, 8.60]);
 makeLabel("PEDESTRIAN ROUTE - 1.10 m CLEAR",    [0, 0.30, 4.00], {bg:'rgba(9,52,32,0.88)', border:'#2fbf71', h:0.042});
 makeLabel("LOADING BAY 1.0 t SWL",              [0, 6.20, 1.40], {bg:'rgba(74,52,8,0.88)', border:'#e8c14a', h:0.042});
+makeLabel("30 TIES at 3.0 kN - BOTH FACES",     [0, 5.02, 7.00], {bg:'rgba(64,10,10,0.90)', border:'#c0392b', h:0.042});
+makeLabel("tube protection foam at every wall contact", [0, 1.05, 3.20], {bg:'rgba(38,38,42,0.88)', border:'#dedad2', h:0.036});
 
 // ---------------------------------------------------------------- CAMERA / INTERACTION
 var DEG = Math.PI/180;
@@ -502,6 +548,7 @@ var walk = {x: WALK_DEF.x, y: WALK_DEF.y, z: WALK_DEF.z, yaw: WALK_DEF.yaw, pitc
 var mode = IS_TOUCH ? 'orbit' : 'walk';       // touch devices default to ORBIT
 var labelsOn = !IS_TOUCH;                     // dimension labels off by default on touch screens
 var frameOnly = false;
+var tiesOn = true;
 var stick = {x:0, y:0};
 
 function applyOrbit(){
@@ -528,6 +575,7 @@ function applyCamera(){
 
 var btnMode = document.getElementById('btnMode');
 var btnFrame = document.getElementById('btnFrame');
+var btnTies = document.getElementById('btnTies');
 var btnLabels = document.getElementById('btnLabels');
 var btnReset = document.getElementById('btnReset');
 var stickEl = document.getElementById('stick');
@@ -554,10 +602,17 @@ function setFrameOnly(v){
   gRail.visible = !v;
   btnFrame.classList.toggle('on', v);
 }
+function setTies(v){
+  tiesOn = v;
+  gTie.visible = v;
+  btnTies.classList.toggle('on', v);
+}
 
 btnMode.addEventListener('click', function(){ setMode(mode === 'orbit' ? 'walk' : 'orbit'); });
 btnLabels.addEventListener('click', function(){ setLabels(!labelsOn); });
 btnFrame.addEventListener('click', function(){ setFrameOnly(!frameOnly); });
+btnTies.addEventListener('click', function(){ setTies(!tiesOn); });
+setTies(true);                                  // ties are on by default: they are the design
 btnReset.addEventListener('click', function(){
   orbit.theta = ORBIT_DEF.theta; orbit.phi = ORBIT_DEF.phi; orbit.r = ORBIT_DEF.r;
   walk.x = WALK_DEF.x; walk.y = WALK_DEF.y; walk.z = WALK_DEF.z; walk.yaw = WALK_DEF.yaw; walk.pitch = WALK_DEF.pitch;
@@ -735,6 +790,7 @@ function updateDbg(){
     stick: {x:+stick.x.toFixed(3), y:+stick.y.toFixed(3)},
     labels: labelsOn,
     frameOnly: frameOnly,
+    ties: tiesOn,
     orbitTheta: +orbit.theta.toFixed(4),
     orbitPhi: +orbit.phi.toFixed(4),
     orbitR: +orbit.r.toFixed(3),
