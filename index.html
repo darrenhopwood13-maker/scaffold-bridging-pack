@@ -1,88 +1,107 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en-GB" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bridging scaffold - design submission pack - BNS-SC-001 Rev P01</title>
 <meta name="description" content="Design submission pack for a 14 m bridging scaffold over a live alley between two houses being re-roofed. For check and approval by a temporary works designer. Not for construction.">
-<meta name="theme-color" content="#0A0B0D">
-<script>document.documentElement.className += " js";</script>
+<meta name="theme-color" content="#F4F5F7">
+<script>
+  /* Runs before paint: applies the saved theme. Default is LIGHT - this page is
+     shown to a client - and with no JavaScript it stays light and fully visible. */
+  (function(){
+    try{
+      var t = localStorage.getItem('theme');
+      document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    }catch(e){}
+    document.documentElement.className += " js";
+  })();
+</script>
 <style>
 /* ------------------------------------------------------------------ fonts */
 @font-face{font-family:Geist;src:url(fonts/geist.woff2) format('woff2');font-weight:400 700;font-display:swap;font-style:normal}
 @font-face{font-family:'Geist Mono';src:url(fonts/geistmono.woff2) format('woff2');font-weight:400 600;font-display:swap;font-style:normal}
 
 /* ------------------------------------------------------------------ tokens
-   ONE accent (amber) for the whole page. Red is reserved for the status only,
-   because "not a permit to load" is semantic, not decoration.
+   Light is the default. Dark is a peer theme, not an afterthought.
+   ONE accent hue (amber) in two jobs: a fill with dark text, and a text colour
+   dark enough to pass contrast on the light background. Red is reserved for the
+   status chip only, because "not a permit to load" is semantic, not decoration.
    Radius scale, documented: panels 18, controls 12, status chip 999.        */
 :root{
-  --bg:#0A0B0D;
-  --bg-2:#0E1013;
-  --panel:#131519;
-  --panel-2:#171A1F;
-  --line:rgba(255,255,255,.09);
-  --line-2:rgba(255,255,255,.16);
-  --ink:#EEF0F3;
-  --ink-2:#A7ADB8;
-  --ink-3:#7C838F;
-  --accent:#E0A253;
-  --accent-ink:#160E03;
-  --status:#FF5C4D;
-  --ok:#5FD39A;
-  --r-panel:18px;
-  --r-ctl:12px;
-  --r-chip:999px;
-  --pad:clamp(18px,4vw,44px);
-  --maxw:1240px;
+  --bg:#F4F5F7; --bg-2:#EDEFF2; --panel:#FFFFFF; --panel-2:#FAFBFC;
+  --line:rgba(16,18,22,.10); --line-2:rgba(16,18,22,.18);
+  --ink:#14161A; --ink-2:#4A5058; --ink-3:#5E6672;
+  --accent-text:#8A5410; --accent-fill:#E4A24A; --accent-ink:#1A1204;
+  --status:#B23A2C; --status-ink:#8E2D22;
+  --chip-bg:rgba(178,58,44,.08); --chip-line:rgba(178,58,44,.30);
+  --glow-1:rgba(228,162,74,.10); --glow-2:rgba(80,110,160,.05);
+  --shadow:0 1px 2px rgba(16,18,22,.05),0 8px 24px -12px rgba(16,18,22,.14);
+  --r-panel:18px; --r-ctl:12px; --r-chip:999px;
+  --pad:clamp(18px,4vw,44px); --maxw:1240px;
+}
+[data-theme="dark"]{
+  --bg:#0A0B0D; --bg-2:#0E1013; --panel:#131519; --panel-2:#171A1F;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16);
+  --ink:#EEF0F3; --ink-2:#A7ADB8; --ink-3:#7C838F;
+  --accent-text:#E0A253; --accent-fill:#E0A253; --accent-ink:#160E03;
+  --status:#FF5C4D; --status-ink:#FFB3AA;
+  --chip-bg:rgba(255,92,77,.09); --chip-line:rgba(255,92,77,.42);
+  --glow-1:rgba(224,162,83,.10); --glow-2:rgba(120,150,200,.06);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -20px rgba(0,0,0,.7);
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--bg);color:var(--ink);
   font-family:Geist,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  font-size:16.5px;line-height:1.6;
-  -webkit-font-smoothing:antialiased;
+  font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  transition:background .3s ease,color .3s ease;
 }
 body::before{ /* one fixed, non-scrolling glow. Never on a scrolling container. */
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:
-    radial-gradient(1100px 520px at 78% -8%,rgba(224,162,83,.10),transparent 62%),
-    radial-gradient(900px 500px at 4% 6%,rgba(120,150,200,.06),transparent 60%);
+  background:radial-gradient(1100px 520px at 78% -8%,var(--glow-1),transparent 62%),
+             radial-gradient(900px 500px at 4% 6%,var(--glow-2),transparent 60%);
 }
 .wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
 h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.022em;line-height:1.06}
 p{margin:0}
-a{color:var(--accent);text-decoration:none}
+a{color:var(--accent-text);text-decoration:none}
 a:hover{text-decoration:underline;text-underline-offset:3px}
 .mono{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+:focus-visible{outline:2px solid var(--accent-text);outline-offset:3px;border-radius:4px}
 
 /* ------------------------------------------------------------------ header */
 header.top{
   position:sticky;top:0;z-index:20;
-  background:rgba(10,11,13,.82);backdrop-filter:blur(14px) saturate(140%);
+  background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:blur(14px) saturate(140%);
   border-bottom:1px solid var(--line);
 }
-.bar{display:flex;align-items:center;gap:clamp(12px,2vw,26px);height:68px}
+.bar{display:flex;align-items:center;gap:clamp(10px,1.8vw,24px);height:68px}
 .mark{display:flex;align-items:center;gap:11px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
-.mark i{width:26px;height:26px;border-radius:6px;background:var(--accent);display:grid;place-items:center;
+.mark i{width:26px;height:26px;border-radius:6px;background:var(--accent-fill);display:grid;place-items:center;
         color:var(--accent-ink);font-style:normal;font-weight:700;font-size:13px;flex:none}
 .chip{
   display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-chip);
-  border:1px solid rgba(255,92,77,.42);background:rgba(255,92,77,.09);
-  color:#FFB3AA;font-size:11px;letter-spacing:.09em;text-transform:uppercase;
-  padding:6px 11px;white-space:nowrap;
+  border:1px solid var(--chip-line);background:var(--chip-bg);color:var(--status-ink);
+  font-size:11px;letter-spacing:.09em;text-transform:uppercase;padding:6px 11px;white-space:nowrap;
 }
-nav{display:flex;gap:clamp(12px,1.8vw,24px);margin-left:auto;font-size:14.5px}
+nav{display:flex;gap:clamp(10px,1.6vw,22px);margin-left:auto;font-size:14.5px}
 nav a{color:var(--ink-2)}
 nav a:hover{color:var(--ink);text-decoration:none}
+.tgl{
+  border:1px solid var(--line-2);background:transparent;color:var(--ink-2);
+  border-radius:var(--r-chip);font:inherit;font-size:13px;padding:7px 13px;cursor:pointer;
+  white-space:nowrap;transition:background .18s,color .18s,border-color .18s;
+}
+.tgl:hover{color:var(--ink);border-color:var(--ink-3)}
 .cta-sm{
-  margin-left:6px;background:var(--accent);color:var(--accent-ink);
-  border-radius:var(--r-ctl);padding:10px 16px;font-weight:600;font-size:14.5px;white-space:nowrap;
+  background:var(--accent-fill);color:var(--accent-ink);border-radius:var(--r-ctl);
+  padding:10px 16px;font-weight:600;font-size:14.5px;white-space:nowrap;
   transition:transform .18s cubic-bezier(.16,1,.3,1),filter .18s;
 }
-.cta-sm:hover{filter:brightness(1.07);text-decoration:none}
+.cta-sm:hover{filter:brightness(1.05);text-decoration:none}
 .cta-sm:active{transform:translateY(1px)}
 
 /* ------------------------------------------------------------------ hero */
@@ -94,20 +113,27 @@ nav a:hover{color:var(--ink);text-decoration:none}
 .btn{
   display:inline-flex;align-items:center;gap:9px;border-radius:var(--r-ctl);
   padding:14px 20px;font-weight:600;font-size:15.5px;white-space:nowrap;border:1px solid transparent;
-  transition:transform .18s cubic-bezier(.16,1,.3,1),background .18s,border-color .18s;
+  transition:transform .18s cubic-bezier(.16,1,.3,1),background .18s,border-color .18s,box-shadow .18s;
 }
-.btn-primary{background:var(--accent);color:var(--accent-ink)}
-.btn-primary:hover{filter:brightness(1.07);text-decoration:none}
-.btn-ghost{border-color:var(--line-2);color:var(--ink);background:rgba(255,255,255,.02)}
-.btn-ghost:hover{background:rgba(255,255,255,.06);text-decoration:none}
+.btn-primary{background:var(--accent-fill);color:var(--accent-ink)}
+.btn-primary:hover{filter:brightness(1.05);text-decoration:none}
+.btn-ghost{border-color:var(--line-2);color:var(--ink);background:var(--panel)}
+.btn-ghost:hover{border-color:var(--ink-3);text-decoration:none}
 .btn:active{transform:translateY(1px)}
 figure{margin:0}
-.shot{border:1px solid var(--line-2);border-radius:var(--r-panel);overflow:hidden;background:var(--panel);display:block}
+.shot{border:1px solid var(--line-2);border-radius:var(--r-panel);overflow:hidden;
+      background:var(--bg-2);display:block;box-shadow:var(--shadow)}
 .shot img{display:block;width:100%;height:auto}
-/* the hero image must not set the row height, or the fold fills with one picture */
 .hero figure{max-width:540px;justify-self:end;width:100%}
 .hero .shot img{height:min(52vh,500px);object-fit:cover;object-position:50% 58%}
 figcaption{margin-top:11px;color:var(--ink-3);font-size:12.8px}
+
+/* theme image swap - both sets are real renders of the same model.
+   NOTE the `.shot img.class` specificity: a bare `.only-dark{display:none}`
+   LOSES to `.shot img{display:block}` and both images render, stacked. */
+.shot img.only-dark{display:none}
+[data-theme="dark"] .shot img.only-light{display:none}
+[data-theme="dark"] .shot img.only-dark{display:block}
 
 /* ------------------------------------------------------------------ numbers */
 .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);
@@ -116,7 +142,7 @@ figcaption{margin-top:11px;color:var(--ink-3);font-size:12.8px}
 .stat:first-child{border-left:0;padding-left:0}
 .stat b{display:block;font-family:'Geist Mono',monospace;font-weight:500;
         font-size:clamp(1.25rem,2.3vw,1.85rem);letter-spacing:-.02em;color:var(--ink)}
-.stat b.hot{color:var(--accent)}
+.stat b.hot{color:var(--accent-text)}
 .stat span{display:block;margin-top:7px;color:var(--ink-2);font-size:13.2px;line-height:1.45}
 
 /* ------------------------------------------------------------------ sections */
@@ -124,37 +150,35 @@ section{padding:clamp(46px,7vw,92px) 0;border-top:1px solid var(--line)}
 section h2{font-size:clamp(1.5rem,2.9vw,2.3rem);max-width:20ch}
 section .sub{margin-top:.85rem;color:var(--ink-2);max-width:62ch}
 
-/* sheets grid */
 .sheets{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(10px,1.5vw,18px);margin-top:clamp(24px,3vw,38px)}
-.sheet{display:block;border:1px solid var(--line);border-radius:var(--r-panel);overflow:hidden;
-       background:var(--panel);transition:border-color .2s,transform .2s cubic-bezier(.16,1,.3,1)}
-.sheet:hover{border-color:rgba(224,162,83,.5);transform:translateY(-3px);text-decoration:none}
-.sheet img{display:block;width:100%;height:auto;background:#fff}
+.sheet{display:block;border:1px solid var(--line-2);border-radius:var(--r-panel);overflow:hidden;
+       background:var(--panel);box-shadow:var(--shadow);
+       transition:border-color .2s,transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s}
+.sheet:hover{border-color:var(--accent-fill);transform:translateY(-3px)}
+.sheet img{display:block;width:100%;height:auto;background:#fff;border-bottom:1px solid var(--line)}
 .sheet .m{padding:11px 12px 13px}
-.sheet .id{font-family:'Geist Mono',monospace;font-size:11.5px;color:var(--accent);letter-spacing:.04em}
+.sheet .id{font-family:'Geist Mono',monospace;font-size:11.5px;color:var(--accent-text);letter-spacing:.04em}
 .sheet .ti{display:block;margin-top:4px;font-size:13px;color:var(--ink);line-height:1.35}
 .sheet .k{display:block;margin-top:6px;font-size:11.8px;color:var(--ink-3)}
 
-/* wide media band */
 .band{display:grid;grid-template-columns:.92fr 1.08fr;gap:clamp(24px,3.4vw,52px);align-items:center}
 .band .shot img{display:block;width:100%;height:auto}
 .facts{display:grid;gap:10px;margin-top:1.3rem}
 .fact{display:flex;gap:12px;font-size:14.6px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:10px}
 .fact b{color:var(--ink);font-family:'Geist Mono',monospace;font-weight:500;min-width:7.5em}
 
-/* sequence + panel */
 .two{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,3.4vw,56px);align-items:start}
 ol.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:16px}
 ol.steps li{counter-increment:s;padding-left:44px;position:relative;color:var(--ink-2);font-size:15px}
 ol.steps li::before{
   content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;
-  font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--accent);
-  border:1px solid var(--line-2);border-radius:8px;padding:3px 7px;
+  font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--accent-text);
+  border:1px solid var(--line-2);border-radius:8px;padding:3px 7px;background:var(--panel);
 }
 ol.steps li b{color:var(--ink);display:block;margin-bottom:3px;font-weight:600}
 ol.steps li.stop b{color:var(--status)}
-.panel{border:1px solid var(--line);border-left:3px solid var(--status);border-radius:var(--r-panel);
-       background:var(--panel);padding:clamp(20px,2.6vw,30px)}
+.panel{border:1px solid var(--line-2);border-left:3px solid var(--status);border-radius:var(--r-panel);
+       background:var(--panel);padding:clamp(20px,2.6vw,30px);box-shadow:var(--shadow)}
 .panel h3{font-size:1.06rem;letter-spacing:-.01em}
 .panel p{margin-top:10px;color:var(--ink-2);font-size:14.6px}
 .panel .open{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
@@ -164,9 +188,8 @@ ul.no li{position:relative;padding-left:26px;color:var(--ink-2);font-size:15px}
 ul.no li::before{content:"";position:absolute;left:4px;top:9px;width:11px;height:1.5px;background:var(--status)}
 ul.no li b{color:var(--ink);font-weight:600}
 
-/* reveal: transform + opacity only, skipped under reduced motion.
-   The hidden state is gated on html.js, so with no JavaScript the page is
-   simply static and fully visible. Content must never depend on a script. */
+/* reveal: transform + opacity only. Hidden state gated on html.js so that with
+   no JavaScript the page is static and every word is visible. */
 .js .rv{opacity:0;transform:translateY(14px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
 .js .rv.in{opacity:1;transform:none}
 
@@ -175,7 +198,6 @@ footer .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
 footer b{color:var(--ink-2);font-weight:600;display:block;margin-bottom:7px}
 footer .mono{font-size:12.6px}
 
-/* ------------------------------------------------------------------ phone */
 @media (max-width:1024px){
   nav{display:none}
   .sheets{grid-template-columns:repeat(3,1fr)}
@@ -206,8 +228,8 @@ footer .mono{font-size:12.6px}
 }
 @media print{
   body{background:#fff;color:#000}
-  body::before,header.top,.btns,ol.steps li::before{display:none}
-  .sheet,.panel,.shot{border-color:#999}
+  body::before,header.top,.btns,ol.steps li::before,.tgl{display:none}
+  .sheet,.panel,.shot{border-color:#999;box-shadow:none}
 }
 </style>
 </head>
@@ -222,13 +244,13 @@ footer .mono{font-size:12.6px}
       <a href="#model">3D model</a>
       <a href="#before">Before erection</a>
     </nav>
+    <button class="tgl" id="themeToggle" type="button" aria-live="polite">Dark</button>
     <a class="cta-sm" href="BNS-SC-001-bridging-scaffold-pack-P01.pdf" target="_blank" rel="noopener">Open the pack</a>
   </div>
 </header>
 
 <main>
 <div class="wrap">
-  <!-- ------------------------------------------------------------ hero -->
   <div class="hero">
     <div>
       <h1>Fourteen metres of scaffold, bridged between two houses.</h1>
@@ -239,12 +261,14 @@ footer .mono{font-size:12.6px}
       </div>
     </div>
     <figure>
-      <span class="shot"><img src="img/hero.jpg" width="1180" height="1475" alt="Inside the alley: scaffold frames receding towards a ladder, deck overhead and the pedestrian route marked on the ground"></span>
+      <span class="shot">
+        <img class="only-light" src="img/hero-light.jpg" width="1180" height="1475" alt="Inside the alley: scaffold frames receding towards a ladder, deck overhead and the pedestrian route marked on the ground">
+        <img class="only-dark" src="img/hero.jpg" width="1180" height="1475" alt="Inside the alley: scaffold frames receding towards a ladder, deck overhead and the pedestrian route marked on the ground">
+      </span>
       <figcaption>The 3D model at deck level, looking down the run towards the access ladder.</figcaption>
     </figure>
   </div>
 
-  <!-- ------------------------------------------------------------ numbers -->
   <div class="strip">
     <div class="stat"><b>14.00 m</b><span>run front to back, 22 standards at 1.40 m centres</span></div>
     <div class="stat"><b>5.75 m</b><span>deck level, three lifts, 1.35 m wide platform</span></div>
@@ -254,7 +278,6 @@ footer .mono{font-size:12.6px}
   </div>
 </div>
 
-<!-- ------------------------------------------------------------ sheets -->
 <section id="sheets">
   <div class="wrap">
     <h2>Every sheet in the pack</h2>
@@ -294,7 +317,6 @@ footer .mono{font-size:12.6px}
   </div>
 </section>
 
-<!-- ------------------------------------------------------------ model -->
 <section id="model">
   <div class="wrap band">
     <div>
@@ -308,13 +330,15 @@ footer .mono{font-size:12.6px}
       <div class="btns"><a class="btn btn-primary" href="viewer/">Walk the 3D model</a></div>
     </div>
     <figure>
-      <span class="shot"><img src="img/orbit-angle.jpg" width="1760" height="990" alt="The bridging platform spanning between two buildings, with the deck, guard rails and the access tower at one end" loading="lazy"></span>
+      <span class="shot">
+        <img class="only-light" src="img/model-light.jpg" width="1760" height="990" alt="The bridging platform spanning between two buildings, with the deck, guard rails and the access tower at one end" loading="lazy">
+        <img class="only-dark" src="img/orbit-angle.jpg" width="1760" height="990" alt="The bridging platform spanning between two buildings, with the deck, guard rails and the access tower at one end" loading="lazy">
+      </span>
       <figcaption>The platform between the two roof edges, with the access tower at the rear.</figcaption>
     </figure>
   </div>
 </section>
 
-<!-- ------------------------------------------------------------ before -->
 <section id="before">
   <div class="wrap two">
     <div>
@@ -339,7 +363,6 @@ footer .mono{font-size:12.6px}
   </div>
 </section>
 
-<!-- ------------------------------------------------------------ not -->
 <section>
   <div class="wrap">
     <h2>What this pack is not</h2>
@@ -373,8 +396,21 @@ footer .mono{font-size:12.6px}
 </footer>
 
 <script>
-/* Reveal on scroll: IntersectionObserver, not a scroll listener.
-   Transform and opacity only. Skipped entirely under reduced motion. */
+/* Theme: light is the default, the choice is remembered. */
+(function(){
+  var root = document.documentElement;
+  var btn = document.getElementById('themeToggle');
+  function label(){ btn.textContent = (root.getAttribute('data-theme') === 'dark') ? 'Light' : 'Dark'; }
+  label();
+  btn.addEventListener('click', function(){
+    var next = (root.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{ localStorage.setItem('theme', next); }catch(e){}
+    label();
+  });
+})();
+
+/* Reveal on scroll: IntersectionObserver, never a scroll listener. */
 (function(){
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var els = Array.prototype.slice.call(document.querySelectorAll('.rv'));
